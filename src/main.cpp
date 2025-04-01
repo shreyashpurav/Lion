@@ -12,7 +12,6 @@
 
 #include <LionMotion.h>
 
-
 /**
  * Variables
  */
@@ -33,6 +32,9 @@ FEHServo arm(FEHServo::Servo0);
 // Declaration for the robot motion control object
 Lion chuck(left_motor, right_motor, left_encoder, right_encoder);
 
+// Global variables for touch input
+int x, y;
+
 /**
  * Constants
  */
@@ -41,24 +43,50 @@ Lion chuck(left_motor, right_motor, left_encoder, right_encoder);
 #define servo_min 700
 #define servo_max 1200
 
-
 /**
  * Functions
  */
 
-void start()
+void CdSCellStart()
 {
+    arm.SetMax(servo_max);
+    arm.SetMin(servo_min);
+    arm.SetDegree(0);
+
+    LCD.Clear(DARKSLATEGRAY);
+    LCD.SetFontColor(RED);
+    LCD.WriteLine("Waiting for CdS Cell");
     while ((CdS_Cell.Value() > cds_red))
     {
         right_motor.SetPercent(0);
         left_motor.SetPercent(0);
     }
+    LCD.Clear(RED);
+    LCD.SetFontColor(DARKSLATEGRAY);
+    LCD.WriteLine("Ready to Pounce");
+}
+
+void TouchStart()
+{
+    arm.SetMax(servo_max);
+    arm.SetMin(servo_min);
+    arm.SetDegree(0);
+
+    LCD.Clear(BLACK);
+    LCD.SetFontColor(PURPLE);
+    LCD.WriteLine("Press to Start");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(BLACK);
+    LCD.SetFontColor(YELLOW);
+    LCD.WriteLine("Ready to Pounce");
 }
 
 void Checkpoint2()
 {
-    start();
-
+    CdSCellStart();
     LCD.Clear(BLUE);
     LCD.SetFontColor(GREEN);
     LCD.WriteLine("Processing");
@@ -99,7 +127,7 @@ void Checkpoint2()
 
 void Checkpoint4()
 {
-    start();
+    CdSCellStart();
     arm.SetDegree(90);
     chuck.bk(27);
     chuck.fd(27);
@@ -135,31 +163,92 @@ void Checkpoint4()
 
 void Pre5()
 {
-    
-}
-
-void Checkpoint5()
-{
-
-}
-
-void ERCMain()
-{
-    int x, y;
-    arm.SetMax(servo_max);
-    arm.SetMin(servo_min);
-    arm.SetDegree(0);
-
-    LCD.Clear(BLACK);
-    LCD.SetFontColor(GREEN);
-    LCD.WriteLine("Press to Start");
+    // Go forward by 100
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for fd(100)");
     while (!LCD.Touch(&x, &y))
         ;
     while (LCD.Touch(&x, &y))
         ;
-    LCD.Clear(RED);
-    LCD.SetFontColor(GRAY);
-    LCD.WriteLine("Waiting to Start");
-    // The real code starts here.
-    
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("fd(100)");
+    chuck.fd(100);
+
+    // Go forward by 200
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for fd(200)");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("fd(200)");
+    chuck.fd(200);
+
+    // Go forward by 300
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for fd(300)");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("fd(300)");
+    chuck.fd(300);
+
+    // Turn right by 20
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for rt(20)");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("rt(20)");
+    chuck.rt(20);
+
+    // Turn right by 40
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for rt(40)");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("rt(40)");
+    chuck.rt(40);
+
+    // Turn right by 80
+    LCD.Clear(BLUE);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteLine("Press for rt(80)");
+    while (!LCD.Touch(&x, &y))
+        ;
+    while (LCD.Touch(&x, &y))
+        ;
+    LCD.Clear(WHITE);
+    LCD.SetFontColor(BLUE);
+    LCD.WriteLine("rt(80)");
+    chuck.rt(80);
+}
+
+void Checkpoint5()
+{
+}
+
+void ERCMain()
+{
+    TouchStart();
+    arm.TouchCalibrate();
+    // Pre5();
 }
