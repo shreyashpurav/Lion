@@ -10,11 +10,6 @@
 #include <FEHServo.h>
 
 /**
- * Include custom components
- */
-#include <LionMotion.h>
-
-/**
  * Variables
  */
 // Declarations for motors
